@@ -26,6 +26,9 @@ param(
     [string]$password = '123456'
 )
 
+#Ignore SSL Errors
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}  
+
 # Confirm Powershell Version.
 if ($PSVersionTable.PSVersion.Major -lt 3) {
     Write-Output "<prtg>"
