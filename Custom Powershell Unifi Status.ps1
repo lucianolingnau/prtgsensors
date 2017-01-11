@@ -116,4 +116,3 @@ Write-Host "<CustomUnit>msecs</CustomUnit>"
 Write-Host "</result>"
 
 write-host "</prtg>"
-Re
