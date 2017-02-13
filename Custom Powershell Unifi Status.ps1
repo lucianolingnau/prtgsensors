@@ -1,4 +1,4 @@
-# Monitor the Status of AP's on Unfi Controller in PRTG v0.4 11/01/2017
+# Monitor the Status of AP's on Unfi Controller in PRTG v0.5 13/02/2017
 # Published Here: https://kb.paessler.com/en/topic/71263
 #
 # Parameters in PRTG are: Controller's URI, Port, Site, Username and Password. Example without placeholders:
@@ -53,7 +53,7 @@ $null = Invoke-Restmethod -Uri "$controller/api/login" -method post -body $crede
     Write-Output "<error>1</error>"
     Write-Output "<text>Authentication Failed: $($_.Exception.Message)</text>"
     Write-Output "</prtg>"
-    Exit
+    # Exit
 }
 
 #Query API providing token from first query.
@@ -64,8 +64,11 @@ $jsonresultat = Invoke-Restmethod -Uri "$controller/api/s/$site/stat/device/" -W
     Write-Output "<error>1</error>"
     Write-Output "<text>API Query Failed: $($_.Exception.Message)</text>"
     Write-Output "</prtg>"
-    Exit
+    # Exit
 }
+
+# To Review the output manually
+# $jsonresultat | ConvertTo-Json
 
 # Stop debug timer
 $queryMeasurement.Stop()
@@ -78,6 +81,11 @@ $queryMeasurement.Stop()
 $apCount = 0
 Foreach ($entry in ($jsonresultat.data | where-object { $_.state -eq "1" -and $_.type -like "uap"})){
     $apCount ++
+}
+
+$apUpgradeable = 0
+Foreach ($entry in ($jsonresultat.data | where-object { $_.state -eq "1" -and $_.type -like "uap" -and $_.upgradable -eq "true"})){
+    $apUpgradeable ++
 }
 
 $userCount = 0
@@ -95,8 +103,13 @@ Foreach ($entry in $jsonresultat.data){
 write-host "<prtg>"
 
 Write-Host "<result>"
-Write-Host "<channel>Connected AP's</channel>"
+Write-Host "<channel>Access Points Connected</channel>"
 Write-Host "<value>$($apCount)</value>"
+Write-Host "</result>"
+
+Write-Host "<result>"
+Write-Host "<channel>Access Points Upgradeable</channel>"
+Write-Host "<value>$($apUpgradeable)</value>"
 Write-Host "</result>"
 
 Write-Host "<result>"
