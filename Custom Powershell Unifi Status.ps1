@@ -136,5 +136,5 @@ if ($debug){
 	$timeStamp = (Get-Date -format yyyy-dd-MM-hh-mm-ss)
 
 	$json = $jsonresultat | ConvertTo-Json
-	$json | Out-File $logPath"unifi_sensor$($timeStamp)_log.xml"
+	$json | Out-File $logPath"unifi_sensor$($timeStamp)_log.json"
 }
