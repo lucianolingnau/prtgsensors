@@ -32,11 +32,11 @@ param(
 
 # Confirm Powershell Version.
 if ($PSVersionTable.PSVersion.Major -lt 3) {
-    Write-Output "<prtg>"
-    Write-Output "<error>1</error>"
-    Write-Output "<text>Powershell Version is $($PSVersionTable.PSVersion.Major) Requires at least 3. </text>"
-    Write-Output "</prtg>"
-    Exit
+	Write-Output "<prtg>"
+	Write-Output "<error>1</error>"
+	Write-Output "<text>Powershell Version is $($PSVersionTable.PSVersion.Major) Requires at least 3. </text>"
+	Write-Output "</prtg>"
+	Exit
 }
 
 # Create $controller and $credential using multiple variables/parameters.
@@ -50,22 +50,22 @@ $queryMeasurement = [System.Diagnostics.Stopwatch]::StartNew()
 try {
 $null = Invoke-Restmethod -Uri "$controller/api/login" -method post -body $credential -ContentType "application/json; charset=utf-8"  -SessionVariable myWebSession
 }catch{
-    Write-Output "<prtg>"
-    Write-Output "<error>1</error>"
-    Write-Output "<text>Authentication Failed: $($_.Exception.Message)</text>"
-    Write-Output "</prtg>"
-    # Exit
+	Write-Output "<prtg>"
+	Write-Output "<error>1</error>"
+	Write-Output "<text>Authentication Failed: $($_.Exception.Message)</text>"
+	Write-Output "</prtg>"
+	Exit
 }
 
 #Query API providing token from first query.
 try {
 $jsonresultat = Invoke-Restmethod -Uri "$controller/api/s/$site/stat/device/" -WebSession $myWebSession
 }catch{
-    Write-Output "<prtg>"
-    Write-Output "<error>1</error>"
-    Write-Output "<text>API Query Failed: $($_.Exception.Message)</text>"
-    Write-Output "</prtg>"
-    # Exit
+	Write-Output "<prtg>"
+	Write-Output "<error>1</error>"
+	Write-Output "<text>API Query Failed: $($_.Exception.Message)</text>"
+	Write-Output "</prtg>"
+	Exit
 }
 
 # To Review the output manually
@@ -81,22 +81,22 @@ $queryMeasurement.Stop()
 
 $apCount = 0
 Foreach ($entry in ($jsonresultat.data | where-object { $_.state -eq "1" -and $_.type -like "uap"})){
-    $apCount ++
+	$apCount ++
 }
 
 $apUpgradeable = 0
 Foreach ($entry in ($jsonresultat.data | where-object { $_.state -eq "1" -and $_.type -like "uap" -and $_.upgradable -eq "true"})){
-    $apUpgradeable ++
+	$apUpgradeable ++
 }
 
 $userCount = 0
 Foreach ($entry in ($jsonresultat.data | where-object { $_.type -like "uap"})){
-    $userCount += $entry.'num_sta'
+	$userCount += $entry.'num_sta'
 }
 
 $guestCount = 0
 Foreach ($entry in $jsonresultat.data){
-    $guestCount += $entry.'guest-num_sta'
+	$guestCount += $entry.'guest-num_sta'
 }
 
 #Write Results
@@ -131,6 +131,7 @@ Write-Host "</result>"
 
 write-host "</prtg>"
 
+# Write JSON file to disk when -debug is set. For troubleshooting only.
 if ($debug){
 	[string]$logPath = ((Get-ItemProperty -Path "hklm:SOFTWARE\Wow6432Node\Paessler\PRTG Network Monitor\Server\Core" -Name "Datapath").DataPath) + "Logs (Sensors)\"
 	$timeStamp = (Get-Date -format yyyy-dd-MM-hh-mm-ss)
