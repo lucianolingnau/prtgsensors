@@ -19,11 +19,12 @@
 #   https://github.com/malle-pietje/UniFi-API-browser/blob/master/phpapi/class.unifi.php
 
 param(
-    [string]$server = 'unifi.domain.com',
-    [string]$port = '8443',
-    [string]$site = 'default',
-    [string]$username = 'admin',
-    [string]$password = '123456'
+	[string]$server = 'unifi.domain.com',
+	[string]$port = '8443',
+	[string]$site = 'default',
+	[string]$username = 'admin',
+	[string]$password = '123456',
+	[switch]$debug = $false
 )
 
 #Ignore SSL Errors
@@ -129,3 +130,11 @@ Write-Host "<CustomUnit>msecs</CustomUnit>"
 Write-Host "</result>"
 
 write-host "</prtg>"
+
+if ($debug){
+	[string]$logPath = ((Get-ItemProperty -Path "hklm:SOFTWARE\Wow6432Node\Paessler\PRTG Network Monitor\Server\Core" -Name "Datapath").DataPath) + "Logs (Sensors)\"
+	$timeStamp = (Get-Date -format yyyy-dd-MM-hh-mm-ss)
+
+	$json = $jsonresultat | ConvertTo-Json
+	$json | Out-File $logPath"unifi_sensor$($timeStamp)_log.xml"
+}
