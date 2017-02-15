@@ -1,4 +1,4 @@
-# Monitor the Status of AP's on Unfi Controller in PRTG v0.5 13/02/2017
+# Monitor the Status of AP's on Unfi Controller in PRTG v0.6 15/02/2017
 # Published Here: https://kb.paessler.com/en/topic/71263
 #
 # Parameters in PRTG are: Controller's URI, Port, Site, Username and Password. Example without placeholders:
