@@ -1,4 +1,4 @@
-# Monitor the Status of AP's on Unfi Controller in PRTG v0.6 15/02/2017
+# Monitor the Status of AP's on Unfi Controller in PRTG v0.7 15/02/2017
 # Published Here: https://kb.paessler.com/en/topic/71263
 #
 # Parameters in PRTG are: Controller's URI, Port, Site, Username and Password. Example without placeholders:
@@ -68,8 +68,9 @@ $jsonresultat = Invoke-Restmethod -Uri "$controller/api/s/$site/stat/device/" -W
 	Exit
 }
 
-# To Review the output manually
-# $jsonresultat | ConvertTo-Json
+# Load File from Debug Log
+# $jsonresultatFile = Get-Content '.\unifi_sensor2017-15-02-05-42-24_log.json'
+# $jsonresultat = $jsonresultatFile | ConvertFrom-Json
 
 # Stop debug timer
 $queryMeasurement.Stop()
@@ -95,7 +96,7 @@ Foreach ($entry in ($jsonresultat.data | where-object { $_.type -like "uap"})){
 }
 
 $guestCount = 0
-Foreach ($entry in $jsonresultat.data){
+Foreach ($entry in ($jsonresultat.data | where-object { $_.type -like "uap"})){
 	$guestCount += $entry.'guest-num_sta'
 }
 
