@@ -30,6 +30,10 @@ param(
 #Ignore SSL Errors
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}  
 
+#Define supported Protocols
+[System.Net.ServicePointManager]::SecurityProtocol = @("Tls12","Tls11","Tls","Ssl3")
+
+
 # Confirm Powershell Version.
 if ($PSVersionTable.PSVersion.Major -lt 3) {
 	Write-Output "<prtg>"
